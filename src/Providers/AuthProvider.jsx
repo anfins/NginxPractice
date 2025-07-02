@@ -25,6 +25,7 @@ import {
 } from "@firebase/auth";
 
 import { auth } from "../Services/Firebase";
+import { useNotification } from "./NotificationProvider";
 
 const AuthContext = createContext({});
 
@@ -46,20 +47,26 @@ const AuthProvider = ({ children }) => {
 
   const signUpWithEmailAndPassword = useCallback(
     (email, password, navigate) => {
-      setPersistence(auth, browserLocalPersistence)
+      // Return the outer Promise from setPersistence
+      return setPersistence(auth, browserLocalPersistence) 
         .then(() => {
           setIsLoading(true);
 
-          createUserWithEmailAndPassword(auth, email, password)
+          // Return the Promise from createUserWithEmailAndPassword
+          return createUserWithEmailAndPassword(auth, email, password) 
             .then((result) => {
+              console.log("User created");
               setUser(result.user);
               setIsLoading(false);
 
               if (navigate) {
-                navigate("/");
+                navigate("/homepage"); // Perform navigation here, as it's part of the signup flow
               }
+              // You can return result.user or a success status if needed by the caller
+              return result.user; // Important: Return something on success for the .then() chain
             })
             .catch((error) => {
+              setIsLoading(false); // Stop loading on error too
               switch (error.code) {
                 case AuthErrorCodes.EMAIL_EXISTS:
                   notification.error(
@@ -71,12 +78,18 @@ const AuthProvider = ({ children }) => {
                     "There was an error creating your account"
                   );
               }
+              // Re-throw the error so the caller's .catch() can still catch it if desired
+              throw error; // Important: Re-throw the error for the .catch() chain
             });
         })
         .catch((error) => {
+          setIsLoading(false); // Stop loading on error too
           if (error.code) {
             console.log(error.code, error.message);
+            // Optionally, handle persistence errors with notifications
+            notification.error(`Persistence error: ${error.message}`);
           }
+          throw error; // Re-throw any error from setPersistence as well
         });
     },
     [notification]
@@ -97,6 +110,7 @@ const AuthProvider = ({ children }) => {
         process.env.NODE_ENV === "production" &&
         providerId.includes("saml")
       ) {
+        console.log("SAML provider");
         provider = new SAMLAuthProvider(providerId);
       } else {
         provider = new GoogleAuthProvider();
