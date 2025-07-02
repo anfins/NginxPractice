@@ -2,6 +2,31 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../Providers/AuthProvider";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  deleteDoc,
+  setDoc,
+  addDoc,
+  query as queryDB,
+  onSnapshot,
+  arrayUnion,
+  arrayRemove,
+  where,
+  orderBy,
+  deleteField,
+  startAfter,
+  endBefore,
+  limit,
+  serverTimestamp,
+  getCountFromServer,
+  documentId,
+  increment,
+} from "@firebase/firestore";
+
+import { firestore } from "../Services/Firebase";
 
 const SignUp = () => {
   const auth = useAuth();
@@ -11,18 +36,35 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  console.log(email, password, confirmPassword);
+  async function addUser() {
+    await addDoc(collection(firestore, "users"), {
+      email: email,
+    });
+  }
 
   /**
    * Sign up the user
    */
-  const signup = (event) => {
+  const signup = async (event) => {
     event.preventDefault();
+
     if (validatePassword()) {
-      console.log("Valid password");
-      auth.signUpWithEmailAndPassword(email, password, navigate);
-    } else {
-      console.log("Invalid password");
+      try {
+        const userCredential = await auth.signUpWithEmailAndPassword(
+          email,
+          password
+        );
+        console.log(userCredential);
+        const userId = userCredential.uid;
+
+        await setDoc(doc(firestore, "users", userId), {
+          email: email,
+        });
+
+        navigate("/");
+      } catch (error) {
+        console.error("Sign up error:", error);
+      }
     }
   };
 
