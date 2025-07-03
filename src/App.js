@@ -35,6 +35,7 @@ import {
 
 import { auth, firestore } from "./Services/Firebase";
 
+console.log(auth);
 function App() {
   // Add a new document
   async function addUser() {
