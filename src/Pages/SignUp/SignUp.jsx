@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useAuth } from "../Providers/AuthProvider";
+import { useAuth } from "../../Providers/AuthProvider";
 import {
   collection,
   doc,
@@ -26,7 +26,7 @@ import {
   increment,
 } from "@firebase/firestore";
 
-import { firestore } from "../Services/Firebase";
+import { firestore } from "../../Services/Firebase";
 
 const SignUp = () => {
   const auth = useAuth();

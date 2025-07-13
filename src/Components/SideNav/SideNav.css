@@ -1,0 +1,96 @@
+.SideNav__container {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.SideNav__navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 16rem;
+  height: 100vh;
+  padding: 2rem 2rem;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+
+  background-color: white;
+}
+
+.compact {
+  width: 8rem;
+}
+
+.SideNav__nav-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.SideNav__logo {
+  max-height: 3rem;
+  padding: 0 0.5rem;
+}
+.compactLogo {
+  max-height: 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.SideNav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  width: 100%;
+}
+
+.SideNav__nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  width: 100%;
+
+  border-radius: 0.5rem;
+}
+
+.SideNav__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  width: 100%;
+  padding: 0.25rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.6);
+
+  text-decoration: none;
+}
+
+.SideNav__nav-link.active {
+  background-color: rgb(var(--secondary));
+  color: black;
+}
+
+.SideNav__page-content {
+  flex: 1;
+  justify-self: flex-start;
+  align-self: flex-start;
+
+  max-width: calc(100% - 16rem);
+}
+
+.SideNav__page-content-compact {
+  flex: 1;
+  justify-self: flex-start;
+  align-self: flex-start;
+
+  max-width: calc(100% - 8rem);
+}
